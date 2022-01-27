@@ -45,6 +45,8 @@ namespace Project0
 
         private Vector2 position;
 
+        private Vector2 velocity;
+
         private BoundingRectangle bounds;
 
         private double animationTimer;
@@ -91,42 +93,61 @@ namespace Project0
         /// <param name="gameTime">The GameTime</param>
         public void Update(GameTime gameTime)
         {
+            velocity = Vector2.Zero;
             gamePadState = GamePad.GetState(0);
             keyboardState = Keyboard.GetState();
 
             // Apply the gamepad movement with inverted Y axis
-            position += gamePadState.ThumbSticks.Left * new Vector2(100 * (float)gameTime.ElapsedGameTime.TotalSeconds, -100 * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            velocity += gamePadState.ThumbSticks.Left * new Vector2(100 * (float)gameTime.ElapsedGameTime.TotalSeconds, -100 * (float)gameTime.ElapsedGameTime.TotalSeconds);
             running = false;
 
             // Apply keyboard movement
-            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) 
-            { 
-                position += new Vector2(0, -100 * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                Direction = Direction.Up;
-                running = true;
-            }
-            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
+            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) velocity += new Vector2(0, -1);
+            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) velocity += new Vector2(0, 1);
+            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A)) velocity += new Vector2(-1, 0);
+            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D)) velocity += new Vector2(1, 0);
+
+            if (Math.Abs(velocity.X) > 0 || Math.Abs(velocity.Y) > 0)
             {
-                position += new Vector2(0, 100 * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                Direction = Direction.Down;
                 running = true;
-            }
-            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
-            {
-                position += new Vector2(-100 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0);
-                Direction = Direction.Left;
-                running = true;
-            }
-            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
-            {
-                position += new Vector2(100 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0);
-                Direction = Direction.Right;
-                running = true;
+                switch (velocity)
+                {
+                    case (0, -1):
+                        Direction = Direction.Up;
+                        break;
+                    case (0, 1):
+                        Direction = Direction.Down;
+                        break;
+                    case (-1, 0):
+                        Direction = Direction.Left;
+                        break;
+                    case (1, 0):
+                        Direction = Direction.Right;
+                        break;
+                    case (1, -1):
+                        Direction = Direction.UpRight;
+                        break;
+                    case (1, 1):
+                        Direction = Direction.DownRight;
+                        break;
+                    case (-1, 1):
+                        Direction = Direction.DownLeft;
+                        break;
+                    case (-1, -1):
+                        Direction = Direction.UpLeft;
+                        break;
+                    default:
+                        Direction = Direction.Down;
+                        break;
+                }
+                velocity.Normalize();
+                position += velocity * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
             // Update the bounds
             bounds.X = position.X - ((width * scale) / 4);
             bounds.Y = position.Y - ((height * scale) / 2);
+
         }
 
         /// <summary>
@@ -139,11 +160,11 @@ namespace Project0
             SpriteEffects spriteEffects = SpriteEffects.None;
 
             animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
-            if (animationTimer > 0.1)
+            if (animationTimer > 0.11)
             {
                 animationFrame++;
                 if (animationFrame > 7) animationFrame = 1;
-                animationTimer -= 0.1;
+                animationTimer -= 0.11;
             }
             var source = new Rectangle(animationFrame * 32, (int)Direction * 32 + 1, 32, 32);
             if (running) 
