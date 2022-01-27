@@ -1,3 +1,11 @@
 ﻿Content/slime.png - created by Nathan Bean for this tutorial, released under public domain
 
 Content/coins.png - created by puddin of OpenGameArt.org (https://opengameart.org/content/rotating-coin) and released under the public domain
+
+Content/Bangers/Bangers-Regular.ttf - Bangers font created by Vernon Adams, released on Google Fonts (https://fonts.google.com/specimen/Bangers) under the Open Font License
+
+Content/Player/IdleSheet.png - created by 14Hertz on OpenGameArt.org (https://opengameart.org/content/8-directional-character-template) and released under OGA-BY-SA 3.0
+
+Content/Player/RunSheet.png - created by 14Hertz on OpenGameArt.org (https://opengameart.org/content/8-directional-character-template) and released under OGA-BY-SA 3.0
+
+Content/Player/StrafeSheet.png - created by 14Hertz on OpenGameArt.org (https://opengameart.org/content/8-directional-character-template) and released under OGA-BY-SA 3.0

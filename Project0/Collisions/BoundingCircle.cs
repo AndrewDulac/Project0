@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace CollisionExample.Collisions
+namespace Project0.Collisions
 {
 
     /// <summary>

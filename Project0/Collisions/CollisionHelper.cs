@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 
-namespace CollisionExample.Collisions
+namespace Project0.Collisions
 {
     public static class CollisionHelper
     {
