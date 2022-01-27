@@ -9,13 +9,14 @@ namespace Project0
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        
-        private List<StarSprite> coins;
-        private PersonSprite slimeGhost;
+        InputManager inputManager;
+
+        private List<StarSprite> stars;
+        private PersonSprite player;
         private SpriteFont titleFont;
         private SpriteFont commonFont;
         private BackGround backGround;
-        private int coinsLeft;
+        private int starsLeft;
 
         /// <summary>
         /// A game demonstrating collision detection
@@ -34,14 +35,15 @@ namespace Project0
         {
             // TODO: Add your initialization logic here
             System.Random rand = new System.Random();
+            inputManager = new InputManager();
             backGround = new BackGround("nightsky");
-            coins = new List<StarSprite>();
+            stars = new List<StarSprite>();
             for(int i = 0; i < 15; i++)
             {
-                coins.Add(new StarSprite(rand, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height / 2)));
+                stars.Add(new StarSprite(rand, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height / 2)));
             }
-            coinsLeft = coins.Count;
-            slimeGhost = new PersonSprite(new Vector2(200,200), 2f);
+            starsLeft = stars.Count;
+            player = new PersonSprite(new Vector2(30, graphics.GraphicsDevice.Viewport.Height - 50), 2f);
 
             base.Initialize();
         }
@@ -54,8 +56,8 @@ namespace Project0
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            foreach (var coin in coins) coin.LoadContent(Content);
-            slimeGhost.LoadContent(Content);
+            foreach (var coin in stars) coin.LoadContent(Content);
+            player.LoadContent(Content);
             backGround.LoadContent(Content, GraphicsDevice);
             titleFont = Content.Load<SpriteFont>("Britannic_Bold_Title");
             commonFont = Content.Load<SpriteFont>("Britannic_Bold_12");
@@ -71,19 +73,20 @@ namespace Project0
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            inputManager.Update(gameTime);
             // TODO: Add your update logic here
-            slimeGhost.Update(gameTime);
+            player.Update(inputManager.Direction, inputManager.DirectionState, 200);
 
-            slimeGhost.Color = Color.White;
+            player.Color = Color.White;
             //Detect and Process collisions
-            foreach (var coin in coins)
+            foreach (var star in stars)
             {
                 //possible to remove coin obj from game instead of hiding/ignoring it?
-                if (!coin.Collected && coin.Bounds.CollidesWith(slimeGhost.Bounds))
+                if (!star.Collected && star.Bounds.CollidesWith(player.Bounds))
                 {
-                    slimeGhost.Color = Color.Red;
-                    coin.Collected = true;
-                    coinsLeft--;
+                    player.Color = Color.Yellow;
+                    star.Collected = true;
+                    starsLeft--;
                 }
             }
            
@@ -111,8 +114,8 @@ namespace Project0
             backGround.Draw(spriteBatch);
             spriteBatch.DrawString(titleFont, title, titleLoc, Color.LightSlateGray);
             spriteBatch.DrawString(commonFont, exitmsg, exitLoc, Color.LightSlateGray);
-            foreach (var coin in coins) coin.Draw(gameTime, spriteBatch);
-            slimeGhost.Draw(gameTime, spriteBatch);
+            foreach (var coin in stars) coin.Draw(gameTime, spriteBatch);
+            player.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 

@@ -9,19 +9,6 @@ using Project0.Collisions;
 
 namespace Project0
 {
-
-    public enum Direction
-    {
-        Up,
-        UpRight,
-        Right,
-        DownRight,
-        Down,
-        DownLeft,
-        Left,
-        UpLeft,
-    }
-
     /// <summary>
     /// A class representing a slime ghost
     /// </summary>
@@ -45,8 +32,6 @@ namespace Project0
 
         private Vector2 position;
 
-        private Vector2 velocity;
-
         private BoundingRectangle bounds;
 
         private double animationTimer;
@@ -55,7 +40,7 @@ namespace Project0
         /// <summary>
         /// direction of the bat
         /// </summary>
-        public Direction Direction;
+        public DirectionEnum DirectionState;
 
         /// <summary>
         /// The color blend with the ghost;
@@ -71,6 +56,7 @@ namespace Project0
         {
             this.position = position;
             this.scale = scale;
+            this.DirectionState = DirectionEnum.Down;
             this.bounds = new BoundingRectangle(
                 position - new Vector2(scale * width/4, scale * height/2),
                 (scale * width / 2),
@@ -91,57 +77,14 @@ namespace Project0
         /// Updates the sprite's position based on user input
         /// </summary>
         /// <param name="gameTime">The GameTime</param>
-        public void Update(GameTime gameTime)
+        public void Update(Vector2 dir, DirectionEnum direction, float velocity)
         {
-            velocity = Vector2.Zero;
-            gamePadState = GamePad.GetState(0);
-            keyboardState = Keyboard.GetState();
-
-            // Apply the gamepad movement with inverted Y axis
-            velocity += gamePadState.ThumbSticks.Left * new Vector2(100 * (float)gameTime.ElapsedGameTime.TotalSeconds, -100 * (float)gameTime.ElapsedGameTime.TotalSeconds);
             running = false;
-
-            // Apply keyboard movement
-            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) velocity += new Vector2(0, -1);
-            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) velocity += new Vector2(0, 1);
-            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A)) velocity += new Vector2(-1, 0);
-            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D)) velocity += new Vector2(1, 0);
-
-            if (Math.Abs(velocity.X) > 0 || Math.Abs(velocity.Y) > 0)
+            if (Math.Abs(dir.X) > 0 || Math.Abs(dir.Y) > 0)
             {
                 running = true;
-                switch (velocity)
-                {
-                    case (0, -1):
-                        Direction = Direction.Up;
-                        break;
-                    case (0, 1):
-                        Direction = Direction.Down;
-                        break;
-                    case (-1, 0):
-                        Direction = Direction.Left;
-                        break;
-                    case (1, 0):
-                        Direction = Direction.Right;
-                        break;
-                    case (1, -1):
-                        Direction = Direction.UpRight;
-                        break;
-                    case (1, 1):
-                        Direction = Direction.DownRight;
-                        break;
-                    case (-1, 1):
-                        Direction = Direction.DownLeft;
-                        break;
-                    case (-1, -1):
-                        Direction = Direction.UpLeft;
-                        break;
-                    default:
-                        Direction = Direction.Down;
-                        break;
-                }
-                velocity.Normalize();
-                position += velocity * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                DirectionState = direction;
+                position += dir * velocity;
             }
 
             // Update the bounds
@@ -166,7 +109,7 @@ namespace Project0
                 if (animationFrame > 7) animationFrame = 1;
                 animationTimer -= 0.08;
             }
-            var source = new Rectangle(animationFrame * 32, (int)Direction * 32 + 1, 32, 32);
+            var source = new Rectangle(animationFrame * 32, (int)DirectionState * 32 + 1, 32, 32);
             if (running) 
             {
                 spriteBatch.Draw(
