@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Project0
 {
@@ -9,9 +10,11 @@ namespace Project0
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         
-        private CoinSprite[] coins;
+        private List<StarSprite> coins;
         private PersonSprite slimeGhost;
-        private SpriteFont spriteFont;
+        private SpriteFont titleFont;
+        private SpriteFont commonFont;
+        private BackGround backGround;
         private int coinsLeft;
 
         /// <summary>
@@ -31,23 +34,13 @@ namespace Project0
         {
             // TODO: Add your initialization logic here
             System.Random rand = new System.Random();
-            coins = new CoinSprite[]
+            backGround = new BackGround("nightsky");
+            coins = new List<StarSprite>();
+            for(int i = 0; i < 15; i++)
             {
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height)),
-                new CoinSprite(new Vector2((float)rand.NextDouble() * GraphicsDevice.Viewport.Width, (float)rand.NextDouble() * GraphicsDevice.Viewport.Height))
-            };
-            coinsLeft = coins.Length;
+                coins.Add(new StarSprite(rand, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height / 2)));
+            }
+            coinsLeft = coins.Count;
             slimeGhost = new PersonSprite(new Vector2(200,200), 2f);
 
             base.Initialize();
@@ -63,7 +56,10 @@ namespace Project0
             // TODO: use this.Content to load your game content here
             foreach (var coin in coins) coin.LoadContent(Content);
             slimeGhost.LoadContent(Content);
-            spriteFont = Content.Load<SpriteFont>("arial");
+            backGround.LoadContent(Content, GraphicsDevice);
+            titleFont = Content.Load<SpriteFont>("Britannic_Bold_Title");
+            commonFont = Content.Load<SpriteFont>("Britannic_Bold_12");
+
         }
 
         /// <summary>
@@ -101,13 +97,23 @@ namespace Project0
         /// <param name="gameTime">The game time</param>
         protected override void Draw(GameTime gameTime)
         {
+            string title = "Tasteless Game";
+            Vector2 titleSize = titleFont.MeasureString(title);
+            Vector2 titleLoc = new Vector2((GraphicsDevice.Viewport.Width/2 - titleSize.X/2), 20);
+            string exitmsg = "Press ESC or the back button on your controller to exit the game.";
+            Vector2 exitmsgSize = commonFont.MeasureString(exitmsg);
+            Vector2 exitLoc = new Vector2((GraphicsDevice.Viewport.Width/2 - exitmsgSize.X/2), 30 + titleSize.Y);
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+            backGround.Draw(spriteBatch);
+            spriteBatch.DrawString(titleFont, title, titleLoc, Color.LightSlateGray);
+            spriteBatch.DrawString(commonFont, exitmsg, exitLoc, Color.LightSlateGray);
             foreach (var coin in coins) coin.Draw(gameTime, spriteBatch);
             slimeGhost.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(spriteFont, $"Coins left: {coinsLeft}", new Vector2(2,2), Color.Gold);
+
             spriteBatch.End();
 
             base.Draw(gameTime);

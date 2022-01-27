@@ -11,13 +11,17 @@ using Project0.Collisions;
 namespace Project0
 {
 
-    public class CoinSprite
+    public class StarSprite
     {
-        private const float ANIMATION_SPEED = 0.1f;
+        private const float ANIMATION_SPEED = 0.08f;
 
         private double animationTimer;
 
         private int animationFrame;
+
+        private bool grow = true;
+
+        public float maxScale, minScale, scale;
 
         private Vector2 position;
 
@@ -37,10 +41,17 @@ namespace Project0
         /// Creates a new coin sprite
         /// </summary>
         /// <param name="position">The position of the sprite in the game</param>
-        public CoinSprite(Vector2 position)
+        public StarSprite(Random rand, Rectangle validArea)
         {
-            this.position = position;
-            this.bounds = new BoundingCircle(position + new Vector2(8, 8), 8);
+            maxScale = (float)rand.NextDouble() * (.08f - .05f) + .05f;
+            minScale = maxScale - .03f;
+
+            this.position = new Vector2(
+                (float)rand.NextDouble() * (validArea.Right - validArea.Left) + validArea.Left, 
+                (float)rand.NextDouble() * (validArea.Bottom - validArea.Top) + validArea.Top);
+            this.bounds = new BoundingCircle(
+                position,
+                (float)rand.NextDouble() * (maxScale - minScale) + minScale);
         }
 
         /// <summary>
@@ -49,7 +60,7 @@ namespace Project0
         /// <param name="content">The ContentManager to load with</param>
         public void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("coins");
+            texture = content.Load<Texture2D>("star");
         }
 
         /// <summary>
@@ -60,17 +71,29 @@ namespace Project0
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (Collected) { return; }
-            animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            SpriteEffects spriteEffects = SpriteEffects.None;
 
+            animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
             if(animationTimer > ANIMATION_SPEED)
             {
-                animationFrame++;
-                if (animationFrame > 7) animationFrame = 0;
+                if (grow && scale <= maxScale) scale += .01f;
+                if (scale > maxScale) grow = !grow;
+                if (!grow && scale >= minScale) scale -= .01f;
+                if (scale < minScale) grow = !grow;
+                
                 animationTimer -= ANIMATION_SPEED;
             }
-
-            var source = new Rectangle(animationFrame * 16, 0, 16, 16);
-            spriteBatch.Draw(texture, position, source, Color.White);
+            spriteBatch.Draw(
+                texture,
+                position,
+                null,
+                Color.White,
+                0,
+                new Vector2(256,256),
+                scale,
+                spriteEffects,
+                0
+            );
         }
     }
 }

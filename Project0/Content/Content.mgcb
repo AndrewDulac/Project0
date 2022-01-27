@@ -13,12 +13,19 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin arial.spritefont
+#begin Britannic_Bold_12.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:arial.spritefont
+/build:Britannic_Bold_12.spritefont
+
+#begin Britannic_Bold_Title.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Britannic_Bold_Title.spritefont
 
 #begin coins.png
 /importer:TextureImporter
@@ -31,6 +38,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:coins.png
+
+#begin nightsky.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:nightsky.png
 
 #begin Player/IdleSheet.png
 /importer:TextureImporter
@@ -68,7 +87,7 @@
 /processorParam:TextureFormat=Color
 /build:Player/StrafeSheet.png
 
-#begin slime.png
+#begin star.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -78,5 +97,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:slime.png
+/build:star.png
 

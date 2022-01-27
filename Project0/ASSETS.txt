@@ -9,3 +9,5 @@ Content/Player/IdleSheet.png - created by 14Hertz on OpenGameArt.org (https://op
 Content/Player/RunSheet.png - created by 14Hertz on OpenGameArt.org (https://opengameart.org/content/8-directional-character-template) and released under OGA-BY-SA 3.0
 
 Content/Player/StrafeSheet.png - created by 14Hertz on OpenGameArt.org (https://opengameart.org/content/8-directional-character-template) and released under OGA-BY-SA 3.0
+
+Content/pixel.png - created by fridaruiz on OpenGameArt.org (https://opengameart.org/content/pixel-night-city) and released under OGA-BY-SA 3.0

@@ -72,7 +72,7 @@ namespace Project0
             this.position = position;
             this.scale = scale;
             this.bounds = new BoundingRectangle(
-                position - new Vector2(scale * width/2, scale * height/2),
+                position - new Vector2(scale * width/4, scale * height/2),
                 (scale * width / 2),
                 scale * height );
         }
@@ -141,7 +141,7 @@ namespace Project0
                         break;
                 }
                 velocity.Normalize();
-                position += velocity * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position += velocity * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
             // Update the bounds
@@ -160,11 +160,11 @@ namespace Project0
             SpriteEffects spriteEffects = SpriteEffects.None;
 
             animationTimer += gameTime.ElapsedGameTime.TotalSeconds;
-            if (animationTimer > 0.11)
+            if (animationTimer > 0.08)
             {
                 animationFrame++;
                 if (animationFrame > 7) animationFrame = 1;
-                animationTimer -= 0.11;
+                animationTimer -= 0.08;
             }
             var source = new Rectangle(animationFrame * 32, (int)Direction * 32 + 1, 32, 32);
             if (running) 
