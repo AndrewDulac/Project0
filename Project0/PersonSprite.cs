@@ -16,6 +16,8 @@ namespace Project0
     {
         private GamePadState gamePadState;
 
+        private Game game;
+
         private float scale;
 
         private const int height = 32;
@@ -52,8 +54,9 @@ namespace Project0
         /// </summary>
         public BoundingRectangle Bounds => bounds;
 
-        public PersonSprite(Vector2 position, float scale)
+        public PersonSprite(Vector2 position, float scale, Game game)
         {
+            this.game = game;
             this.position = position;
             this.scale = scale;
             this.DirectionState = DirectionEnum.Down;
@@ -86,7 +89,11 @@ namespace Project0
                 DirectionState = direction;
                 position += dir * velocity;
             }
-
+            var viewport = game.GraphicsDevice.Viewport;
+            if (position.Y < 0) position.Y = viewport.Height;
+            if (position.Y > viewport.Height) position.Y = 0;
+            if (position.X < 0) position.X = viewport.Width;
+            if (position.X > viewport.Width) position.X = 0;
             // Update the bounds
             bounds.X = position.X - ((width * scale) / 4);
             bounds.Y = position.Y - ((height * scale) / 2);

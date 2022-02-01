@@ -43,7 +43,7 @@ namespace Project0
                 stars.Add(new StarSprite(rand, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height / 2)));
             }
             starsLeft = stars.Count;
-            player = new PersonSprite(new Vector2(30, graphics.GraphicsDevice.Viewport.Height - 50), 2f);
+            player = new PersonSprite(new Vector2(30, graphics.GraphicsDevice.Viewport.Height - 50), 2f, this);
 
             base.Initialize();
         }
