@@ -17,8 +17,6 @@ namespace Project0
 
         private double animationTimer;
 
-        private int animationFrame;
-
         private bool grow = true;
 
         public float maxScale, minScale, scale;
@@ -26,6 +24,8 @@ namespace Project0
         private Vector2 position;
 
         private Texture2D texture;
+
+        private Vector2 rotatePoint;
 
         private BoundingCircle bounds;
         public bool Collected { get; set; } = false;
@@ -46,9 +46,10 @@ namespace Project0
             maxScale = (float)rand.NextDouble() * (.08f - .05f) + .05f;
             minScale = maxScale - .03f;
 
-            this.position = new Vector2(
+            this.rotatePoint = new Vector2(
                 (float)rand.NextDouble() * (validArea.Right - validArea.Left) + validArea.Left, 
                 (float)rand.NextDouble() * (validArea.Bottom - validArea.Top) + validArea.Top);
+            this.position = this.rotatePoint + new Vector2((float)rand.NextDouble(),(float)rand.NextDouble())*5;
             this.bounds = new BoundingCircle(
                 position,
                 (float)rand.NextDouble() * (maxScale - minScale) + minScale);
@@ -61,6 +62,26 @@ namespace Project0
         public void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("star");
+        }
+
+        /// <summary>
+        /// Updates the sprite's position based on user input
+        /// </summary>
+        /// <param name="gameTime">The GameTime</param>
+        public void Update(GameTime gameTime)
+        {
+            double cosTheta = Math.Cos(.1);
+            double sinTheta = Math.Sin(.1);
+            position = new Vector2(
+                (float)(cosTheta * (position.X - rotatePoint.X) -
+                sinTheta * (position.Y - rotatePoint.Y) + rotatePoint.X),
+
+                (float)(sinTheta * (position.X - rotatePoint.X) +
+                cosTheta * (position.Y - rotatePoint.Y) + rotatePoint.Y)
+            );
+            // Update the bounds
+            bounds.Center = position;
+
         }
 
         /// <summary>

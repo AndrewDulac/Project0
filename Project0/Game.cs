@@ -82,11 +82,15 @@ namespace Project0
             foreach (var star in stars)
             {
                 //possible to remove coin obj from game instead of hiding/ignoring it?
-                if (!star.Collected && star.Bounds.CollidesWith(player.Bounds))
+                if (!star.Collected)
                 {
-                    player.Color = Color.Yellow;
-                    star.Collected = true;
-                    starsLeft--;
+                    star.Update(gameTime);
+                    if (star.Bounds.CollidesWith(player.Bounds))
+                    {
+                        player.Color = Color.Yellow;
+                        star.Collected = true;
+                        starsLeft--;
+                    }
                 }
             }
            

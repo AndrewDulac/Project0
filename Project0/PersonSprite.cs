@@ -13,9 +13,7 @@ namespace Project0
     /// A class representing a slime ghost
     /// </summary>
     public class PersonSprite
-    {
-        private GamePadState gamePadState;
-
+    { 
         private Game game;
 
         private float scale;
@@ -23,8 +21,6 @@ namespace Project0
         private const int height = 32;
 
         private const int width = 32;
-
-        private KeyboardState keyboardState;
 
         private Texture2D idleTexture;
 
